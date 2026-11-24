@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SII Decrypt — ETS2 &amp; ATS Save File Decoder</title>
+  <meta name="description" content="Decode encrypted .sii save and profile files from Euro Truck Simulator 2 and American Truck Simulator, locally in your browser.">
+  <!-- TODO: replace example.com with the production domain -->
+  <link rel="canonical" href="https://example.com/pages/sii-decrypt.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="SII Decrypt — ETS2 &amp; ATS Save File Decoder">
+  <meta property="og:description" content="Decode encrypted .sii save and profile files from Euro Truck Simulator 2 and American Truck Simulator, locally in your browser.">
+  <meta property="og:url" content="https://example.com/pages/sii-decrypt.html">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" type="image/svg+xml" href="Assets/images/favicon.svg">
+  <script src="Assets/javascript/theme.js"></script>
+  <link rel="preload" href="fonts/Norrvik-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/Norrvik-Bold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="Assets/css/norrvik.css">
+  <link rel="stylesheet" href="Assets/css/main.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header"><div class="container">
+    <a class="brand" href="index.html">ETS2 <span>Tools</span></a>
+    <nav aria-label="Primary">
+    </nav>
+    <div class="theme-picker"><label for="theme-select"><span>Theme</span></label>
+      <select id="theme-select"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></div>
+  </div></header>
+  <main id="main"><div class="container">
+    <p class="eyebrow">ETS2 · ATS · save files</p>
+    <h1>Decode encrypted <span>.sii</span> files.</h1>
+    <p class="lede">Open <code>profile.sii</code>, <code>game.sii</code> and other encrypted save or mod files as readable text. Decryption happens on your device; nothing is uploaded.</p>
+    <section class="card" aria-label="File decoder">
+      <div class="result-head"><span class="label">Inbound file</span><span class="label" id="ticket-id">#SII-000</span></div>
+      <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Choose a .sii file or drop one here">
+        <input type="file" id="file-input" accept=".sii,.bsii,.bin,.txt" hidden>
+        <svg viewBox="0 0 64 64" fill="none" aria-hidden="true"><rect x="10" y="26" width="44" height="30" rx="2" stroke="currentColor" stroke-width="2.5"/><path d="M32 6v30M32 6l-10 10M32 6l10 10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <p>Drop a <strong>.sii</strong> file here, or click to browse</p>
+        <p class="sub">Back up your save before replacing any file in your profile folder.</p>
+      </div>
+      <dl class="meta" id="file-info" hidden>
+        <div><dt>File</dt><dd id="file-name">—</dd></div><div><dt>Size</dt><dd id="file-size">—</dd></div><div><dt>Format</dt><dd id="file-format">—</dd></div>
+      </dl>
+      <ol class="steps" aria-label="Progress">
+        <li data-step="read">Read header</li><li data-step="decrypt">AES-256-CBC decrypt</li><li data-step="inflate">Zlib inflate</li><li data-step="done">Ready</li>
+      </ol>
+      <p class="status" id="status" role="status" hidden></p>
+      <noscript><p class="error">This tool needs JavaScript to run.</p></noscript>
+    </section>
+    <section class="card" id="result" hidden aria-label="Decoded contents" style="margin-top:var(--s5)">
+      <div class="result-head"><span class="label">Decoded contents</span><button id="download-btn" type="button" class="btn btn--primary">Download</button></div>
+      <pre class="preview" id="preview" tabindex="0"></pre>
+    </section>
+    <details>
+      <summary>How this works</summary>
+      <p>Some SCS Software files are stored in an encrypted container that starts with the signature <code>ScsC</code>: a 32-byte HMAC, a 16-byte AES initialization vector, the decoded size, then AES-256-CBC encrypted, zlib-compressed <code>SiiNunit</code> text.</p>
+      <p>The key has been public since the community SII_Decrypt project documented it, and every open-source decoder uses it. This page repeats that process with your browser's built-in Web Crypto API.</p>
+      <p>Plain-text files are returned as they are. Unencrypted binary (BSII) files are detected, but converting them to text needs a larger decoder than this tool includes, so you get the raw bytes.</p>
+    </details>
+  </div></main>
+  <footer class="site-footer"><div class="container">Unofficial fan tools. Not affiliated with SCS Software. Runs entirely in your browser; nothing is uploaded.</div></footer>
+  <script src="Assets/javascript/sii-codec.js"></script>
+  <script src="Assets/javascript/sii-app.js"></script>
+</body></html>
